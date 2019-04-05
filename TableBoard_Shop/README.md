@@ -31,19 +31,37 @@ Note:
 - 각 속성의 type 은 자유롭게 설정 (단, 입력되는 값의 타입과 일치해야 함)
     - ex) price -> int
     - ex) name -> char or varchar
-    
+
+## 공통사항
+// MySQL 데이터베이스 연결
+$connect = mysql_connect("localhost","khj","111");
+// DB 선택
+mysql_select_db("khj_db", $connect);
+
+// select 쿼리 스트링 생성
+$sql = "select * from tableboard_shop";
+// select 쿼리 스트링 실행
+$result = mysql_query($sql, $connect);
+
 ## index.php 수정
-[여기에 index.php 를 어떻게 수정했는지, 설명을 작성하세요.]
+화면에 하나하나 항목을 추가하는 부분을 제거하고
+while문을 통해 DB에서 가져온 데이터를 한줄한줄 불러와 각각 이름에 맞게
+출력하였고, 총합의 경우는 가격과 개수 변수를 만들어 곱한 값이 출력되게하였다.
 
 ## board_form.php 수정
-[여기에 board_form.php 를 어떻게 수정했는지, 설명을 작성하세요.]
+특정 튜플을 클릭했을 때 받아온 num값을 이용해 DB에서 일치하는 num값의 데이터들을
+출력하게 하였다.
 
 ## function
 ### insert.php 수정
-[여기에 insert.php 를 어떻게 수정했는지, 설명을 작성하세요.]
+입력받는 값이 date, order_id, name, price, quantity이므로 
+DB에서 테이블에 자료를 넣는 insert into문을 사용하여 POST형식으로 입력받은 값을
+DB에 저장하였다.
 
 ### update.php 수정
-[여기에 update.php 를 어떻게 수정했는지, 설명을 작성하세요.]
+클릭한 특정 튜플의 num값에 맞는 데이터에서 튜플 내용을 수정하는
+update set문을 이용하여 POST형식으로 입력받은 값을 DB에 저장하였다.
 
 ### delete.php 수정
-[여기에 delete.php 를 어떻게 수정했는지, 설명을 작성하세요.]
+클릭한 특정 튜플의 num값에 맞는 데이터에서 튜플을 제거하는
+delete from을 이용하여 num값에 맞는 튜플을 DB에서 제거하였다.
