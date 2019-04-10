@@ -2,13 +2,13 @@
     $connect = mysql_connect("localhost","khj","111"); // DB 연결
     mysql_select_db("khj_db", $connect);                // DB 선택
 
-    if ($_GET[mode] == "insert")                       	   // 데이터 입력 모드
+    if ($mode == "insert")                       	   // 데이터 입력 모드
     {
-        $_POST[sum] = $_POST[sub1] + $_POST[sub2] + $_POST[sub3] + $_POST[sub4] + $_POST[sub5];           // 합계 구하기
-        $_POST[avg] = $_POST[sum]/5;                           		// 평균 구하기
+        $sum = $sub1 + $sub2 + $sub3 + $sub4 + $sub5;           // 합계 구하기
+        $avg = $sum/5;                           		// 평균 구하기
 
-        $_POST[sql] = "insert into stud_score (name, sub1, sub2, sub3, sub4, sub5, sum, avg) values";
-        $_POST[sql] .= "('$_POST[name]', $_POST[sub1], $_POST[sub2], $_POST[sub3], $_POST[sub4], $_POST[sub5], $_POST[sum], $_POST[avg])";
+        $sql = "insert into stud_score (name, sub1, sub2, sub3, sub4, sub5, sum, avg) values";
+        $sql .= "('$name', $sub1, $sub2, $sub3, $sub4, $sub4, $sum, $avg)";
 
         $result = mysql_query($sql, $connect);
     }
@@ -56,26 +56,26 @@
 
  <?
  // select 문 수행
-    if ($_GET[mode] == "big_first")          // 성적순 정렬(내림차순)
-       $_POST[sql] = "select * from stud_score order by sum desc";
-    else if ($_GET[mode] == "small_first")   // 성적순 정렬(오름차순)
-       $_POST[sql] = "select * from stud_score order by sum";
+    if ($mode == "big_first")          // 성적순 정렬(내림차순)
+       $sql = "select * from stud_score order by sum desc";
+    else if ($mode == "small_first")   // 성적순 정렬(오름차순)
+       $sql = "select * from stud_score order by sum";
     else
-       $_POST[sql] = "select * from stud_score";
+       $sql = "select * from stud_score";
 
-    $_POST[result] = mysql_query($_POST[sql]);
+    $result = mysql_query($sql);
 
-    $_POST[count] = 1;                        // 화면 출력 시 일렬번호
+    $count = 1;                        // 화면 출력 시 일렬번호
 
  // DB 데이터 출력 시작
-    while ($_POST[row] = mysql_fetch_array(result))
+    while ($row = mysql_fetch_array($result))
     {
-       avg = round(row[avg], 1);
+       $avg = round($row[avg], 1);
 
-       num = row[num];
+       $num = $row[num];
 
        echo "<tr align='center'>
-                <td> count     </td>
+                <td> $count     </td>
        		<td> $row[name] </td>
        		<td> $row[sub1] </td>
        		<td> $row[sub2] </td>
@@ -84,7 +84,7 @@
        		<td> $row[sub5] </td>
        		<td> $row[sum]  </td>
        		<td> $avg  </td>
-       		<td> <a href='7-9score_delete.php?num=$num'>[삭제]</a></td>
+       		<td> <a href='score_delete.php?num=$num'>[삭제]</a></td>
 	      </tr>
              ";
 

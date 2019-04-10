@@ -1,7 +1,7 @@
 ﻿<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?
-     $connect = mysql_connect("localhost","kyj","1111");
-     $dbconn = mysql_select_db("kyj_db", $connect);
+     $connect = mysql_connect("localhost","khj","111");
+     $dbconn = mysql_select_db("khj_db", $connect);
  
      $sql = "create table stud_score ( ";
      $sql .= "num int not null auto_increment, ";

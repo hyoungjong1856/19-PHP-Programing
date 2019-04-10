@@ -1,7 +1,7 @@
 ﻿<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?
-$connect = mysql_connect("localhost","kyj","1111");
-$db_con = mysql_select_db("kyj_db", $connect);
+$connect = mysql_connect("localhost","khj","111");
+$db_con = mysql_select_db("khj_db", $connect);
 
 $sql = "select * from membership where address like '%서울%' order by age;";
 $result = mysql_query($sql,$connect);

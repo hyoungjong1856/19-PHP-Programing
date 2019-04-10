@@ -5,7 +5,7 @@
   contents text,
   primary key(num)
 );
-/* 조건 select * from tablename where title like "%su%";*/
+
 insert into boardz(image_url, title, contents) values ('http://2.bp.blogspot.com/-pINYV0WlFyA/VUK-QcGbU5I/AAAAAAAABcU/fNy2pd2cFRk/s1600/WEB-Jack-White-Poster-Creative.png', 'PHP', '');
 insert into boardz(image_url, title, contents) values ('http://payload140.cargocollective.com/1/10/349041/5110553/Florrie.jpg', '', '');
 insert into boardz(image_url, title, contents) values ('http://wpmedia.ottawacitizen.com/2015/11/01.jpg?quality=55&strip=all&w=840&h=630&crop=1', 'sumo', '');

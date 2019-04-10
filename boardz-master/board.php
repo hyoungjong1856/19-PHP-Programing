@@ -1,19 +1,23 @@
 <!-- 구글 검색 : galley board css => CSS Only Pinterest-like Responsive Board Layout - Boardz.css | CSS ... -->
 <!-- 출처 : https://www.cssscript.com/css-pinterest-like-responsive-board-layout-boardz-css/ -->
 <?php
+# TODO: MySQL 데이터베이스 연결 및 레코드 가져오기!
+// MySQL 데이터베이스 연결
 $connect = mysql_connect("localhost","khj","111");
+// DB 선택
 mysql_select_db("khj_db", $connect);
 
-$sql = "select * from boardz where name=$_POST[auto_increment]";
+$sql = "select * from boardz where title like '%$_GET[search]%'";
+
+// select 쿼리 스트링 실행
 $result = mysql_query($sql, $connect);
 
-$row = mysql_fetch_array($result);
+$dataNum = 0;
 
-
-
+while($row = mysql_fetch_array($result)){
+    $dataNum++;
+}
 ?>
-
-
 
 <!doctype html>
 
@@ -43,7 +47,7 @@ $row = mysql_fetch_array($result);
             <div class="text-center">
                 <h2>Beautiful <strong>Boardz</strong></h2>
                 <div style="display: block; width: 50%; margin-right: auto; margin-left: auto; position: relative;">
-                    <form class="example" action="action_page.php">
+                    <form class="example" method="get" action="board.php">
                         <input type="text" placeholder="Search.." name="search">
                         <button type="submit"><i class="fa fa-search"></i></button>
                     </form>
@@ -54,40 +58,56 @@ $row = mysql_fetch_array($result);
 
             <!-- Example Boardz element. -->
             <div class="boardz centered-block beautiful">
-                <ul>
-                    <li>
-                        <img src="http://2.bp.blogspot.com/-pINYV0WlFyA/VUK-QcGbU5I/AAAAAAAABcU/fNy2pd2cFRk/s1600/WEB-Jack-White-Poster-Creative.png" alt="demo image"/>
-                    </li>
+                <?php
+                $result = mysql_query($sql, $connect); // 위에서 while문으로 사용해서 새로 값 불러옴
 
-                    <li>
-                        <img src="http://payload140.cargocollective.com/1/10/349041/5110553/Florrie.jpg" alt="demo image"/>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <img src="http://wpmedia.ottawacitizen.com/2015/11/01.jpg?quality=55&strip=all&w=840&h=630&crop=1" alt="demo image"/>
-                    </li>
-                    <li>
-                        <img src="https://s-media-cache-ak0.pinimg.com/736x/8c/ee/ff/8ceeff967c03c7cf4f86391dd6366544.jpg" alt="demo image"/>
-                    </li>
-                    <li>
-                        <img src="https://s-media-cache-ak0.pinimg.com/originals/87/16/8c/87168cbbf07cb54a9793bebaa20b1bde.jpg" alt="demo image"/>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <img src="https://s-media-cache-ak0.pinimg.com/736x/22/95/48/229548086245c332443109ca9f2e0890.jpg" alt="demo image"/>
-                    </li>
-                    <li>
-                        <h1>Sumo Summo</h1>
-                        Ex nostrud verterem mea, duo no delicata neglegentur. Audire integre rationibus ut pri, ex cibo oblique euismod sit, cibo iracundia vix at. Legimus torquatos definiebas an nec, mazim postulant at sit. Ne qui quando vocent accusata, nam tritani fierent no. Ea per vocent voluptatibus.
+                $colNumCount = 1; // 열을 구분할 때 쓰기위해 현재 열에 자료가 몇개있는지 나타내는 값
+                $colIndex = 0; // 현재 몇번째 열인지 나타내는 인덱스 값
+                $maxCol = $dataNum; // 총 데이터 개수(튜플 수)에 따른 출력할 때 표현할 열의 개수 설정
+                if($dataNum > 3) // 최대 열은 3까지
+                    $maxCol = 3;
 
-                        <br />
+                switch($maxCol){ // 열 개수(1~3)에 따라, 다음 열로 넘어가기 위해 필요한 데이터 개수(튜플 수)를 저장해 놓은 배열설정
+                    case 1:
+                        $nextColNum = array(1); // 데이터 개수가 1개면 열은 1개
+                        break;
+                    case 2:
+                        $nextColNum = array(1,1); // 데이터 개수가 2개면 열은 2개
+                        break;
+                    case 3:
+                        if($dataNum % 3 == 1) // 열 개수가 3개이고 전체 데이터를 3으로 나눴을 때 나머지가 1일 때(ex.4, 7),
+                            // 각각의 열에 존재하는 데이터 개수는 3으로 나눈 값에 (올림,내림,내림)한 값이다
+                            // ex) 7 일경우 3으로 나눈값은 2.333, 첫번째열~세번째열에 존재하는 데이터 수는
+                            // ((올림)2.3, (내림)2.3, (내림)2.3)인 (3개,2개,2개)이다.
+                            // 아래도 이와같은 규칙으로 설정하였다.
+                            $nextColNum = array(ceil($dataNum / 3), floor($dataNum / 3), floor($dataNum / 3));
+                        else if($dataNum % 3 == 2)
+                            $nextColNum = array(ceil($dataNum / 3), ceil($dataNum / 3), floor($dataNum / 3));
+                        else
+                            $nextColNum = array($dataNum / 3, $dataNum / 3, $dataNum / 3);
+                        break;
+                }
 
-                        <img src="https://inspirationfeeed.files.wordpress.com/2014/01/ca402f7410884454ec5c303336e8591d1.jpg" alt="demo image"/>
+                while($row = mysql_fetch_array($result)){
+                    if($colNumCount == 1){
+                        echo "<ul>";
+                    }
 
-                    </li>
-                </ul>      
+                    echo "<li>";
+                    echo "<h1>$row[title]</h1>";
+                    echo "$row[contents]";
+                    echo "<img src=\"$row[image_url]\" alt=\"demo image\"/>";
+                    echo "</li>";
+
+                    if($colNumCount == $nextColNum[$colIndex]){ // 현재 열에 있어야할 데이터 개수만큼 채워지면 다음 열로 이동
+                        echo "</ul>";
+                        $colNumCount = 0;
+                        $colIndex++;
+                    }
+                    $colNumCount++;
+                };
+                ?>
+
             </div>
         </div>
 
